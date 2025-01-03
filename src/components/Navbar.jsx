@@ -1,13 +1,14 @@
 import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import musify from "../img/musify.webp";
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
     <>
       <nav className="navbar bg-body-tertiary my-4">
         <div className="container-fluid">
-          <a href="#" className="navbar-brand fw-bold text-spotify">
+          <Link to="/" className="navbar-brand fw-bold text-spotify">
             <LazyLoadImage
               src={musify}
               alt="logo brand"
@@ -16,7 +17,10 @@ function Navbar() {
               className="d-inline-block align-text-top ms-1 me-2"
             />
             Musify
-          </a>
+          </Link>
+          <Link to="MyMusic" className="navbar-brand fw-bold">
+            My Music
+          </Link>
         </div>
       </nav>
     </>
