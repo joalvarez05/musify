@@ -1,42 +1,47 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.text-spotify {
+  color: #1dd75f !important;
+}
+
+.song-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 300px;
+  max-height: 500px;
+  max-width: 300px !important;
+  padding: 15px;
+
+  border-radius: 8px;
+}
+
+.song-title {
+  margin-top: 0.5rem;
+  font-size: 1.25rem;
   text-align: center;
+  white-space: nowrap;
+  text-wrap: wrap;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.list-group-item {
+  text-align: center;
+  word-wrap: break-word;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+@media (max-width: 768px) {
+  .song-title {
+    white-space: normal;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (width <= 500px) {
+  .song-card {
+    min-height: 250px;
+    max-height: 450px;
+    max-width: 250px !important;
   }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+  .img-pequena {
+    max-width: 220px;
+    max-height:220px ;
+  }
 }
