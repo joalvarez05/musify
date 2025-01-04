@@ -2,22 +2,31 @@ import { useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import musify from "../img/musify.webp";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
+import { Audio } from "react-loader-spinner"; // Importa el spinner
+
 function Buscador() {
   const [cancion, setCancion] = useState("");
   const [canciones, setCanciones] = useState([]);
   const [savedSongs, setSavedSongs] = useState(
     JSON.parse(localStorage.getItem("savedSongs")) || []
   );
+  const [loading, setLoading] = useState(false); // Estado para el spinner
 
   const handleSearch = (e) => {
     e.preventDefault();
+
     if (cancion.trim() === "") {
       alert("You must write a song to search");
       return;
     }
+
     setCancion("");
     getSong(cancion);
   };
+
   const options = {
     method: "GET",
     headers: {
@@ -28,23 +37,49 @@ function Buscador() {
 
   async function getSong(cancion) {
     try {
-      let url = `https://spotify23.p.rapidapi.com/search/?q=${cancion}&type=multi&offset=0&limit=20&numberOfTopResults=5`;
+      setLoading(true);
+
+      let url = `https://spotify23.p.rapidapi.com/search/?q=${cancion}&type=multi&offset=0&limit=15&numberOfTopResults=5`;
       let data = await fetch(url, options);
       let res = await data.json();
+
       setCanciones(res.tracks.items);
+
     } catch (error) {
-      console.log(`ups... error ${error}`);
+
+      alert(`Ups... error ${error}`);
+
+    } finally {
+
+      setLoading(false); 
+      
     }
   }
+
   const handleClick = (song) => {
     setSavedSongs((prevSongs) => {
       const saved = prevSongs.find((s) => s.data.id === song.data.id);
+
       if (saved) {
         console.log("This Song is already saved");
         return prevSongs;
       }
+
       const updatedSongs = [...prevSongs, song];
       localStorage.setItem("savedSongs", JSON.stringify(updatedSongs));
+      Swal.fire({
+        title: "Do you want to save this song?",
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: "Save",
+        denyButtonText: `Don't save`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire("Saved!");
+        } else if (result.isDenied) {
+          Swal.fire("Changes are not saved");
+        }
+      });
       return updatedSongs;
     });
   };
@@ -52,7 +87,12 @@ function Buscador() {
   return (
     <div>
       <div className="d-flex justify-content-center align-items-center flex-column gap-2">
-        <LazyLoadImage src={musify} alt="musify" className="img-fluid brand" />
+        <LazyLoadImage
+          src={musify}
+          alt="musify"
+          className="img-fluid brand"
+          id="main"
+        />
         <h1 className="text-spotify">Spotify API</h1>
         <p className="fw-medium">Please search for a song to play</p>
       </div>
@@ -74,8 +114,17 @@ function Buscador() {
         </form>
         <div className="container">
           <div className="row gap-2 d-flex align-items justify-content-center">
-            {canciones.map((cancion) => (
-              <>
+            {loading ? (
+              <div className="d-flex justify-content-center align-items-center">
+                <Audio
+                  height="75"
+                  width="75"
+                  color="#1dd75f"
+                  ariaLabel="loading"
+                />
+              </div>
+            ) : (
+              canciones.map((cancion) => (
                 <div
                   key={cancion.data.id}
                   className="col text-center song-card"
@@ -104,18 +153,23 @@ function Buscador() {
                       Play Song
                     </a>
                     <button
-                      onClick={() => {
-                        handleClick(cancion);
-                      }}
+                      onClick={() => handleClick(cancion)}
                       className="btn btn-outline-primary mt-3"
                     >
                       Save
                     </button>
                   </div>
                 </div>
-              </>
-            ))}
+              ))
+            )}
           </div>
+          {canciones.length > 0 && (
+            <div className="fixed-arrow">
+              <a href="#">
+                <FontAwesomeIcon icon={faArrowUp} color="black" size="1x" />
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -28,6 +28,17 @@
   word-wrap: break-word;
 }
 
+/* Arrow up | Fixed | */
+.fixed-arrow {
+  position: fixed;
+  bottom: 50px;
+  right: 65px;
+  z-index: 99;
+  border-radius: 45%;
+  background-color: #eeeeee;
+  padding: 15px;
+}
+
 @media (max-width: 768px) {
   .song-title {
     white-space: normal;
@@ -42,6 +53,15 @@
   }
   .img-pequena {
     max-width: 220px;
-    max-height:220px ;
+    max-height: 220px;
+  }
+  .fixed-arrow {
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    z-index: 99;
+    border-radius: 45%;
+    background-color: #eeeeee;
+    padding: 10px;
   }
 }

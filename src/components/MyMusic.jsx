@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Swal from "sweetalert2";
 
 function MyMusic() {
   const [savedSongs, setSavedSongs] = useState(
@@ -12,14 +13,48 @@ function MyMusic() {
   }, []);
 
   const removeSong = (songId) => {
-    const updatedSongs = savedSongs.filter((song) => song.data.id !== songId);
-    setSavedSongs(updatedSongs);
-    localStorage.setItem("savedSongs", JSON.stringify(updatedSongs));
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger",
+      },
+      buttonsStyling: false,
+    });
+    swalWithBootstrapButtons
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true,
+      })
+      .then((result) => {
+        if (result.isConfirmed) {
+          swalWithBootstrapButtons.fire({
+            title: "Deleted!",
+            text: "Your song has been deleted.",
+            icon: "success",
+          });
+          const updatedSongs = savedSongs.filter(
+            (song) => song.data.id !== songId
+          );
+          setSavedSongs(updatedSongs);
+          localStorage.setItem("savedSongs", JSON.stringify(updatedSongs));
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          swalWithBootstrapButtons.fire({
+            title: "Cancelled",
+            text: "Your song is safe :)",
+            icon: "error",
+          });
+        }
+      });
   };
 
   return (
     <>
-      <h2 className="text-center my-5">My Songs</h2>
+      <h2 className="text-center my-5">My Music</h2>
       <div className="container">
         <div className="row gap-2 d-flex justify-content-center">
           {savedSongs === null || savedSongs.length === 0 ? (
