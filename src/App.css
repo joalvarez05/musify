@@ -1,7 +1,9 @@
 .text-spotify {
   color: #1dd75f !important;
 }
-
+.text-yellow {
+color:#007dcb
+}
 .song-card {
   display: flex;
   flex-direction: column;

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Swal from "sweetalert2";
+import Breadcrumb from "./Breadcrumb";
 
 function MyMusic() {
   const [savedSongs, setSavedSongs] = useState(
@@ -54,6 +55,7 @@ function MyMusic() {
 
   return (
     <>
+      <Breadcrumb />
       <h2 className="text-center my-5">My Music</h2>
       <div className="container">
         <div className="row gap-2 d-flex justify-content-center">

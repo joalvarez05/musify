@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Buscador from "./components/Buscador";
 import MyMusic from "./components/MyMusic";
-
 function App() {
   return (
     <>

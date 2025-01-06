@@ -13,13 +13,14 @@ function Buscador() {
   const [savedSongs, setSavedSongs] = useState(
     JSON.parse(localStorage.getItem("savedSongs")) || []
   );
-  const [loading, setLoading] = useState(false); // Estado para el spinner
+
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
 
     if (cancion.trim() === "") {
-      alert("You must write a song to search");
+      Swal.fire("You must write a song to search :)");
       return;
     }
 
@@ -44,15 +45,10 @@ function Buscador() {
       let res = await data.json();
 
       setCanciones(res.tracks.items);
-
     } catch (error) {
-
       alert(`Ups... error ${error}`);
-
     } finally {
-
-      setLoading(false); 
-      
+      setLoading(false);
     }
   }
 
@@ -94,9 +90,15 @@ function Buscador() {
           id="main"
         />
         <h1 className="text-spotify">Spotify API</h1>
-        <p className="fw-medium">Please search for a song to play</p>
+        <p className="text-center fw-medium lead">
+          1) Search a song. <br />
+          2) Save it to your library. <br />
+          3) Play it whenever you want. <br />
+          <span className="text-spotify">Powered by the Spotify API.</span>
+        </p>
+        <p className="fw-medium h5">Please search for a song to play</p>
       </div>
-      <div>
+      <div className="mt-3">
         <form
           onSubmit={handleSearch}
           className="d-flex flex-column align-items-center"
