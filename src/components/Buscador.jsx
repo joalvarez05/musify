@@ -5,7 +5,7 @@ import musify from "../img/musify.webp";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
-import { Audio } from "react-loader-spinner"; // Importa el spinner
+import { Audio } from "react-loader-spinner";
 
 function Buscador() {
   const [cancion, setCancion] = useState("");
@@ -13,7 +13,6 @@ function Buscador() {
   const [savedSongs, setSavedSongs] = useState(
     JSON.parse(localStorage.getItem("savedSongs")) || []
   );
-
   const [loading, setLoading] = useState(false);
 
   const handleSearch = (e) => {
@@ -24,8 +23,13 @@ function Buscador() {
       return;
     }
 
-    setCancion("");
+    if (cancion.length > 50) {
+      Swal.fire("Your search is too long, please try again");
+      return;
+    }
+
     getSong(cancion);
+    setCancion("");
   };
 
   const options = {
@@ -39,14 +43,20 @@ function Buscador() {
   async function getSong(cancion) {
     try {
       setLoading(true);
+      const url = `https://spotify23.p.rapidapi.com/search/?q=${encodeURIComponent(
+        cancion
+      )}&type=multi&offset=0&limit=15&numberOfTopResults=5`;
+      const response = await fetch(url, options);
+      const data = await response.json();
 
-      let url = `https://spotify23.p.rapidapi.com/search/?q=${cancion}&type=multi&offset=0&limit=15&numberOfTopResults=5`;
-      let data = await fetch(url, options);
-      let res = await data.json();
+      if (!data.tracks?.items || data.tracks.items.length === 0) {
+        Swal.fire("No songs found. Please try another search!");
+        return;
+      }
 
-      setCanciones(res.tracks.items);
+      setCanciones(data.tracks.items);
     } catch (error) {
-      alert(`Ups... error ${error}`);
+      Swal.fire(`Ups... error ${error.message}`);
     } finally {
       setLoading(false);
     }
@@ -54,28 +64,27 @@ function Buscador() {
 
   const handleClick = (song) => {
     setSavedSongs((prevSongs) => {
-      const saved = prevSongs.find((s) => s.data.id === song.data.id);
+      const alreadySaved = prevSongs.find((s) => s.data.id === song.data.id);
 
-      if (saved) {
-        console.log("This Song is already saved");
+      if (alreadySaved) {
+        Swal.fire("This song is already saved!");
         return prevSongs;
       }
 
       const updatedSongs = [...prevSongs, song];
       localStorage.setItem("savedSongs", JSON.stringify(updatedSongs));
+
       Swal.fire({
         title: "Do you want to save this song?",
         showDenyButton: true,
-        showCancelButton: true,
         confirmButtonText: "Save",
         denyButtonText: `Don't save`,
       }).then((result) => {
         if (result.isConfirmed) {
           Swal.fire("Saved!");
-        } else if (result.isDenied) {
-          Swal.fire("Changes are not saved");
         }
       });
+
       return updatedSongs;
     });
   };
@@ -107,6 +116,8 @@ function Buscador() {
             className="form-control w-50"
             type="text"
             name="buscador"
+            maxLength={50}
+            minLength={3}
             value={cancion}
             onChange={(e) => setCancion(e.target.value)}
           />
@@ -126,34 +137,38 @@ function Buscador() {
                 />
               </div>
             ) : (
-              canciones.map((cancion) => (
+              canciones?.map((cancion) => (
                 <div
                   key={cancion.data.id}
                   className="col text-center song-card"
                 >
                   <ul className="list-group list-group-flush d-flex justify-content-center">
                     <LazyLoadImage
-                      src={cancion.data.albumOfTrack.coverArt.sources[0].url}
-                      alt={cancion.data.artists.items[0].profile.name}
+                      src={cancion.data.albumOfTrack.coverArt.sources[0]?.url}
+                      alt={cancion.data.artists.items[0]?.profile.name}
                       effect="blur"
                       className="img-pequena"
                     />
                     <h2 className="song-title">
-                      {cancion.data.artists.items[0].profile.name}
+                      {cancion.data.artists.items[0]?.profile.name}
                     </h2>
                     <li className="fs-4 p-0 list-group-item">
                       {cancion.data.name.length > 45
-                        ? cancion.data.name.slice(0, 44) + "..."
+                        ? `${cancion.data.name.slice(0, 44)}...`
                         : cancion.data.name}
                     </li>
                   </ul>
                   <div className="d-flex justify-content-center align-items-center gap-3">
-                    <a
-                      href={cancion.data.uri}
-                      className="btn btn-outline-success mt-3"
-                    >
-                      Play Song
-                    </a>
+                    {cancion.data.uri.startsWith("spotify:") ? (
+                      <a
+                        href={cancion.data.uri}
+                        className="btn btn-outline-success mt-3"
+                      >
+                        Play song
+                      </a>
+                    ) : (
+                      <p>Invalid URI</p>
+                    )}
                     <button
                       onClick={() => handleClick(cancion)}
                       className="btn btn-outline-primary mt-3"
