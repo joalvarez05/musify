@@ -167,7 +167,7 @@ function Buscador() {
                         Play song
                       </a>
                     ) : (
-                      <p>Invalid URI</p>
+                      <p clasName="fw-bold btn btn-danger mt-3">Unavailable</p>
                     )}
                     <button
                       onClick={() => handleClick(cancion)}
