@@ -6,6 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowUp } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { Audio } from "react-loader-spinner";
+import { getSong } from "../services/api";
+import { validateSong } from "../utils/validateSong";
 
 function Buscador() {
   const [cancion, setCancion] = useState("");
@@ -17,50 +19,10 @@ function Buscador() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-
-    if (cancion.trim() === "") {
-      Swal.fire("You must write a song to search :)");
-      return;
-    }
-
-    if (cancion.length > 50) {
-      Swal.fire("Your search is too long, please try again");
-      return;
-    }
-
-    getSong(cancion);
+    if (!validateSong(cancion)) return;
+    getSong(cancion, setCanciones, setLoading);
     setCancion("");
   };
-
-  const options = {
-    method: "GET",
-    headers: {
-      "x-rapidapi-key": import.meta.env.VITE_RAPIDAPI_KEY,
-      "x-rapidapi-host": import.meta.env.VITE_RAPIDAPI_HOST,
-    },
-  };
-
-  async function getSong(cancion) {
-    try {
-      setLoading(true);
-      const url = `https://spotify23.p.rapidapi.com/search/?q=${encodeURIComponent(
-        cancion
-      )}&type=multi&offset=0&limit=15&numberOfTopResults=5`;
-      const response = await fetch(url, options);
-      const data = await response.json();
-
-      if (!data.tracks?.items || data.tracks.items.length === 0) {
-        Swal.fire("No songs found. Please try another search!");
-        return;
-      }
-
-      setCanciones(data.tracks.items);
-    } catch (error) {
-      Swal.fire(`Ups... error ${error.message}`);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const handleClick = (song) => {
     setSavedSongs((prevSongs) => {
