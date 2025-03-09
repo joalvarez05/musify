@@ -18,7 +18,7 @@ function Navbar() {
             />
             Musify
           </Link>
-          <Link to="MyMusic" className="navbar-brand fw-bold">
+          <Link to="MyMusic" className="navbar-brand btn btn-success fw-bold">
             My Library
           </Link>
         </div>
