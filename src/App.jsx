@@ -13,7 +13,7 @@ function App() {
           <Route path="MyMusic" element={<MyMusic />} />
         </Routes>
       </div>
-     //     <p>&copy; 2024 <a href="https://uhmo.com.ar/" target="_blank">by UHMO</a> Todos los derechos reservados.</p>
+     <p className="text-center">&copy; 2024 <a href="https://uhmo.com.ar/" target="_blank">by UHMO</a> Todos los derechos reservados.</p>
 
     </>
   );
