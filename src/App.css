@@ -1,0 +1,72 @@
+.text-spotify {
+  color: #1dd75f !important;
+}
+.bg-spotify {
+  background-color: #50f58a !important;
+}
+.text-yellow {
+  color: #007dcb;
+}
+.song-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 300px;
+  max-height: 500px;
+  max-width: 300px !important;
+  padding: 15px;
+
+  border-radius: 8px;
+}
+
+.song-title {
+  margin-top: 0.5rem;
+  font-size: 1.25rem;
+  text-align: center;
+  white-space: nowrap;
+  text-wrap: wrap;
+}
+
+.list-group-item {
+  text-align: center;
+  word-wrap: break-word;
+}
+
+/* Arrow up | Fixed | */
+.fixed-arrow {
+  position: fixed;
+  bottom: 50px;
+  right: 65px;
+  z-index: 99;
+  border-radius: 45%;
+  background-color: #eeeeee;
+  padding: 15px;
+}
+
+@media (max-width: 768px) {
+  .song-title {
+    white-space: normal;
+  }
+}
+
+@media (width <= 500px) {
+  .song-card {
+    min-height: 250px;
+    max-height: 450px;
+    max-width: 250px !important;
+  }
+  .img-pequena {
+    max-width: 220px;
+    max-height: 220px;
+  }
+  .fixed-arrow {
+    position: fixed;
+    bottom: 50px;
+    right: 40px;
+    z-index: 99;
+    border-radius: 45%;
+    background-color: #eeeeee;
+    padding: 10px;
+  }
+}

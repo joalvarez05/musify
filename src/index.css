@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.brand {
+  height: 120px;
+  width: 120px;
+}
+
+@media screen and (max-width: 600px) {
+  .brand {
+    height: 110px;
+    width: 110px;
+  }
+}
