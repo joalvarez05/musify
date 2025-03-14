@@ -57,8 +57,8 @@
     max-width: 250px !important;
   }
   .img-pequena {
-    max-width: 220px;
-    max-height: 220px;
+    max-width: 100px;
+    max-height: 1000px;
   }
   .fixed-arrow {
     position: fixed;
