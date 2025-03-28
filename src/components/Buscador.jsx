@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import "react-lazy-load-image-component/src/effects/blur.css";
 import musify from "../img/musify.webp";
@@ -16,10 +16,21 @@ function Buscador() {
     JSON.parse(localStorage.getItem("savedSongs")) || []
   );
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (savedSongs.length > 0) {
+      localStorage.setItem("savedSongs", JSON.stringify(savedSongs));
+    }
+  }, [savedSongs]);
+
   const handleSearch = (e, category) => {
     e.preventDefault();
     const query = category || cancion;
-    if (!validateSong(query)) return;
+    if (!validateSong(query)) {
+      Swal.fire("Invalid song name", "Please enter a valid song name", "error");
+      return;
+    }
+    setLoading(true);
     getSong(query, setCanciones, setLoading);
     setCancion("");
   };
@@ -39,8 +50,6 @@ function Buscador() {
       }
 
       const updatedSongs = [...prevSongs, song];
-      localStorage.setItem("savedSongs", JSON.stringify(updatedSongs));
-
       Swal.fire({
         title: "Do you want to save this song?",
         showDenyButton: true,
@@ -65,7 +74,7 @@ function Buscador() {
           className="img-fluid brand"
           id="main"
         />
-        <h1 className="text-spotify">Spotify API</h1>
+        <h1 className="text-spotify">Spotify Search</h1>
         <p className="text-center fw-medium fs-5">
           1) Search a song. <br />
           2) Save it to your library. <br />
@@ -76,42 +85,34 @@ function Buscador() {
             <p className="fw-medium text-center h3">Random search</p>
             <div className="container my-1">
               <div className="d-flex justify-content-center gap-3">
-                <div>
-                  <button
-                    type="button"
-                    className="btn btn-md btn-warning fw-medium"
-                    onClick={searchSad}
-                  >
-                    Sad
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    className="btn btn-md btn-info fw-medium"
-                    onClick={searchChill}
-                  >
-                    Chill
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    className="btn btn-md btn-success fw-medium"
-                    onClick={searchParty}
-                  >
-                    Party
-                  </button>
-                </div>
-                <div>
-                  <button
-                    type="button"
-                    className="btn btn-md btn-primary fw-medium"
-                    onClick={searchHappy}
-                  >
-                    Happy
-                  </button>
-                </div>
+                <button
+                  type="button"
+                  className="btn btn-md btn-warning fw-medium"
+                  onClick={searchSad}
+                >
+                  Sad
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-md btn-info fw-medium"
+                  onClick={searchChill}
+                >
+                  Chill
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-md btn-success fw-medium"
+                  onClick={searchParty}
+                >
+                  Party
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-md btn-primary fw-medium"
+                  onClick={searchHappy}
+                >
+                  Happy
+                </button>
               </div>
             </div>
           </div>
@@ -128,6 +129,7 @@ function Buscador() {
                 minLength={3}
                 value={cancion}
                 onChange={(e) => setCancion(e.target.value)}
+                aria-label="Song search input"
               />
               <button type="submit" className="btn btn-outline-secondary m-3">
                 Search
@@ -145,51 +147,63 @@ function Buscador() {
                     />
                   </div>
                 ) : (
-                  canciones?.map((cancion) => (
-                    <div
-                      key={cancion.data.id}
-                      className="col text-center song-card"
-                    >
-                      <ul className="list-group list-group-flush d-flex justify-content-center">
-                        <LazyLoadImage
-                          src={
-                            cancion.data.albumOfTrack.coverArt.sources[0]?.url
-                          }
-                          alt={cancion.data.artists.items[0]?.profile.name}
-                          effect="blur"
-                          className="img-pequena"
-                        />
-                        <h2 className="song-title">
-                          {cancion.data.artists.items[0]?.profile.name}
-                        </h2>
-                        <li className="fs-4 p-0 list-group-item">
-                          {cancion.data.name.length > 45
-                            ? `${cancion.data.name.slice(0, 44)}...`
-                            : cancion.data.name}
-                        </li>
-                      </ul>
-                      <div className="d-flex justify-content-center align-items-center gap-3">
-                        {cancion.data.uri.startsWith("spotify:") ? (
-                          <a
-                            href={cancion.data.uri}
-                            className="btn btn-outline-success mt-3"
+                  canciones
+                    .filter(
+                      (cancion) =>
+                        cancion?.data?.albumOfTrack?.coverArt?.sources?.[0]
+                          ?.url &&
+                        cancion?.data?.artists?.items?.[0]?.profile?.name &&
+                        cancion?.data?.name
+                    )
+                    .map((cancion) => (
+                      <div
+                        key={cancion.data.id}
+                        className="col text-center song-card"
+                      >
+                        <ul className="list-group list-group-flush d-flex justify-content-center">
+                          <LazyLoadImage
+                            src={
+                              cancion.data.albumOfTrack.coverArt.sources[0]
+                                ?.url || "No Image Available"
+                            }
+                            alt={
+                              cancion.data.artists.items[0]?.profile.name ||
+                              "Artist Name"
+                            }
+                            effect="blur"
+                            className="img-pequena"
+                          />
+                          <h2 className="song-title">
+                            {cancion.data.artists.items[0]?.profile.name}
+                          </h2>
+                          <li className="fs-4 p-0 list-group-item">
+                            {cancion.data.name.length > 45
+                              ? `${cancion.data.name.slice(0, 44)}...`
+                              : cancion.data.name}
+                          </li>
+                        </ul>
+                        <div className="d-flex justify-content-center align-items-center gap-3">
+                          {cancion.data.uri.startsWith("spotify:") ? (
+                            <a
+                              href={cancion.data.uri}
+                              className="btn btn-outline-success mt-3"
+                            >
+                              Play
+                            </a>
+                          ) : (
+                            <p className="fw-bold btn btn-danger mt-3">
+                              Unavailable
+                            </p>
+                          )}
+                          <button
+                            onClick={() => handleClick(cancion)}
+                            className="btn btn-outline-primary mt-3"
                           >
-                            Play song
-                          </a>
-                        ) : (
-                          <p className="fw-bold btn btn-danger mt-3">
-                            Unavailable
-                          </p>
-                        )}
-                        <button
-                          onClick={() => handleClick(cancion)}
-                          className="btn btn-outline-primary mt-3"
-                        >
-                          Save
-                        </button>
+                            Save
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  ))
+                    ))
                 )}
               </div>
               {canciones.length > 0 && (

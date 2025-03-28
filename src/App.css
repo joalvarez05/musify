@@ -10,11 +10,10 @@
 .song-card {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
-  min-height: 300px;
-  max-height: 500px;
-  max-width: 300px !important;
+  min-height: 250px;
+  max-height: 400px;
+  max-width: 250px !important;
   padding: 15px;
 
   border-radius: 8px;
@@ -43,7 +42,10 @@
   background-color: #eeeeee;
   padding: 15px;
 }
-
+.img-pequena {
+  max-width: 150px;
+  max-height: 150px;
+}
 @media (max-width: 768px) {
   .song-title {
     white-space: normal;
@@ -58,7 +60,7 @@
   }
   .img-pequena {
     max-width: 100px;
-    max-height: 1000px;
+    max-height: 100px;
   }
   .fixed-arrow {
     position: fixed;

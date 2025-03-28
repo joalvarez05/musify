@@ -69,7 +69,7 @@ function MyMusic() {
           ) : (
             savedSongs.map((song) => (
               <div key={song.data.id} className="col text-center song-card">
-                <ul className="list-group list-group-flush d-flex justify-content-center">
+                <ul className="list-group list-group-flush d-flex justify-content-center align-items-center">
                   <img
                     src={song.data.albumOfTrack.coverArt.sources[0].url}
                     alt={song.data.artists.items[0].profile.name}
@@ -89,7 +89,7 @@ function MyMusic() {
                     href={song.data.uri}
                     className="btn btn-outline-success mt-3"
                   >
-                    Play Song
+                    Play
                   </a>
                   <button
                     onClick={() => removeSong(song.data.id)}
