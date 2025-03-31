@@ -35,10 +35,11 @@ function Buscador() {
     setCancion("");
   };
 
-  const searchHappy = (e) => handleSearch(e, "happy");
-  const searchSad = (e) => handleSearch(e, "sad");
-  const searchChill = (e) => handleSearch(e, "chill");
-  const searchParty = (e) => handleSearch(e, "party");
+  const searchHappy = (e) =>
+    handleSearch(e, " shakira harry styles rosalia karol g");
+  const searchSad = (e) => handleSearch(e, "adele, coldplay");
+  const searchChill = (e) => handleSearch(e, "bob marley, nonpalidece, ");
+  const searchParty = (e) => handleSearch(e, "emilia bud bunny luckra");
 
   const handleClick = (song) => {
     setSavedSongs((prevSongs) => {
