@@ -67,7 +67,7 @@ function Buscador() {
   };
 
   return (
-    <div>
+    <div className="bg-grande">
       <div className="d-flex justify-content-center align-items-center flex-column gap-2">
         <LazyLoadImage
           src={musify}
@@ -75,11 +75,10 @@ function Buscador() {
           className="img-fluid brand"
           id="main"
         />
-        <h1 className="text-spotify">Spotify Search</h1>
+        <h1 className="text-spotify">Music Search</h1>
         <p className="text-center fw-medium fs-5">
           1) Search a song. <br />
-          2) Save it to your library. <br />
-          <span className="text-spotify">Powered by the Spotify API.</span>
+          2) Play or save it to your library. <br />
         </p>
         <div className="container">
           <div>
@@ -126,6 +125,7 @@ function Buscador() {
                 className="form-control w-75"
                 type="text"
                 name="buscador"
+                placeholder="Search any song"
                 maxLength={50}
                 minLength={3}
                 value={cancion}

@@ -31,22 +31,3 @@ export async function getSong(cancion, setCanciones, setLoading) {
     setLoading(false);
   }
 }
-
-// export async function playlist(genero) {
-//   const url = `https://spotify23p.rapidapi.com/playlist/?id=${genero}`;
-//   const options = {
-//     method: "GET",
-//     headers: {
-//       "x-rapidapi-key": apiKey,
-//       "x-rapidapi-host": apiHost,
-//     },
-//   };
-
-//   try {
-//     const response = fetch(url, options);
-//     const result = await response.text();
-//     console.log(result);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }

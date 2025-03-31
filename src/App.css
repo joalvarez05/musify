@@ -1,3 +1,6 @@
+.bg-grande {
+  min-height: 90dvh;
+}
 .text-spotify {
   color: #1dd75f !important;
 }
